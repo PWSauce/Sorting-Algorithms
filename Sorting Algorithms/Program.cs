@@ -10,7 +10,7 @@ namespace Sorting_Algorithms
     {
         static void Main(string[] args)
         {
-            int[] arr = new int[100000];
+            int[] arr = new int[7];
 
             Random rand = new Random();
 
@@ -20,9 +20,16 @@ namespace Sorting_Algorithms
             }
 
 
-            int[] arrTemp1 = arr;
-            int[] arrTemp2 = arr;
-            int[] arrTemp3 = arr;
+
+            
+            int[] arrTemp1 = new int[arr.Length];
+            int[] arrTemp2 = new int[arr.Length];
+            int[] arrTemp3 = new int[arr.Length];
+
+
+            Array.Copy(arr, arrTemp1, arr.Length);
+            Array.Copy(arr, arrTemp2, arr.Length);
+            Array.Copy(arr, arrTemp3, arr.Length);
 
             DateTime start = DateTime.Now;
             Quicksort(arrTemp1, 0, arr.Length - 1);
@@ -40,9 +47,15 @@ namespace Sorting_Algorithms
             Console.WriteLine($"Insertionsort tog {insertionEnd.TotalMilliseconds} ms");
 
             DateTime mergeStart = DateTime.Now;
-            MergeSort(arrTemp3);
+            Sort(arrTemp3, 0, arrTemp3.Length - 1);
             TimeSpan mergeEnd = DateTime.Now - mergeStart;
             Console.WriteLine($"Mergesort tog {mergeEnd.TotalMilliseconds} ms");
+
+
+            foreach (int a in arrTemp3)
+            {
+                Console.WriteLine(a);
+            }
         }
 
         static void BubbleSort(int[] arr)
@@ -111,78 +124,68 @@ namespace Sorting_Algorithms
                 }
             }
         }
-        static int[] MergeSort(int[] arr)
+        static void Merge(int[] arr, int leftLength, int middle, int rightLength)
         {
-            int[] left;
-            int[] right;
-            int[] sortedArr;
-
-            if (arr.Length <= 1)
-                return arr;
-
-            int middle = arr.Length / 2;
-            left = new int[middle];
-
-            if (arr.Length % 2 == 0)
-                right = new int[middle];
-            else
-                right = new int[middle + 1];
-
-            for (int i = 0; i < middle; i++)
-            {
-                left[i] = arr[i];
-            }
-            int rightIdx = 0;
-            for (int i = middle; i < arr.Length; i++)
-            {
-                right[rightIdx] = arr[i];
-                rightIdx++;
-            }
-
-            left = MergeSort(left);
-            right = MergeSort(right);
-            sortedArr = Merge(left, right);
-
-            return sortedArr;
-        }
-        static int[] Merge(int[] left, int[] right)
-        {
-            int[] sortedArr = new int[right.Length + left.Length];
-
+            int start = middle - leftLength + 1;
+            int end = rightLength - middle;
             int leftIdx = 0;
             int rightIdx = 0;
-            int sortedIdx = 0;
-            while (left.Length > leftIdx || right.Length > rightIdx)
+            int arrIdx = leftLength;
+
+            int[] left = new int[start];
+            int[] right = new int[end];
+
+            for (int i = 0; i < start; i++)
             {
-                if (left.Length > leftIdx && right.Length > rightIdx)
-                {
-                    if (left[leftIdx] <= right[rightIdx])
-                    {
-                        sortedArr[sortedIdx] = left[leftIdx];
-                        leftIdx++;
-                        sortedIdx++;
-                    }
-                    else
-                    {
-                        sortedArr[sortedIdx] = right[rightIdx];
-                        rightIdx++;
-                        sortedIdx++;
-                    }
-                }
-                else if (left.Length > leftIdx)
-                {
-                    sortedArr[sortedIdx] = left[leftIdx];
-                    leftIdx++;
-                    sortedIdx++;
-                }
-                else if (right.Length > rightIdx)
-                {
-                    sortedArr[sortedIdx] = right[rightIdx];
-                    rightIdx++;
-                    sortedIdx++;
-                }
+                left[i] = arr[leftLength + i];
             }
-            return sortedArr;
+            for (int i = 0; i < end; i++)
+            {
+                right[i] = arr[middle + i + 1];
+            }
+
+            while (leftIdx < start && rightIdx < end)
+            {
+                if (left[leftIdx] <= right[rightIdx])
+                {
+                    arr[arrIdx] = left[leftIdx];
+                    leftIdx++;
+                }
+                else
+                {
+                    arr[arrIdx] = right[rightIdx];
+                    rightIdx++;
+                }
+                arrIdx++;
+            }
+
+            while (leftIdx < start)
+            {
+                arr[arrIdx] = left[leftIdx];
+                leftIdx++;
+                arrIdx++;
+            }
+
+            while (rightIdx < end)
+            {
+                arr[arrIdx] = right[rightIdx];
+                rightIdx++;
+                arrIdx++;
+            }
+        }
+
+        static void Sort(int[] arr, int left, int right)
+        {
+            if (left < right)
+            {
+                int middle = left + (right - left) / 2;
+
+                Sort(arr, left, middle);
+                Sort(arr, middle + 1, right);
+
+                Merge(arr, left, middle, right);
+            }
         }
     }
 }
+
