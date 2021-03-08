@@ -10,7 +10,7 @@ namespace Sorting_Algorithms
     {
         static void Main(string[] args)
         {
-            int[] arr = new int[7];
+            int[] arr = new int[200000];
 
             Random rand = new Random();
 
@@ -50,12 +50,6 @@ namespace Sorting_Algorithms
             Sort(arrTemp3, 0, arrTemp3.Length - 1);
             TimeSpan mergeEnd = DateTime.Now - mergeStart;
             Console.WriteLine($"Mergesort tog {mergeEnd.TotalMilliseconds} ms");
-
-
-            foreach (int a in arrTemp3)
-            {
-                Console.WriteLine(a);
-            }
         }
 
         static void BubbleSort(int[] arr)
