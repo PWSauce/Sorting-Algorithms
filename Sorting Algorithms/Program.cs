@@ -105,7 +105,7 @@ namespace Sorting_Algorithms
 
         static void InsertionSort(int[] arr)
         {
-            for (int i = 0; i < arr.Length-1; i++)
+            for (int i = 1; i < arr.Length-1; i++)
             {
                 for (int j = i+1; j > 0; j--)
                 {
